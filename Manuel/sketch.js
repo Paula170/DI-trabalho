@@ -1,12 +1,14 @@
 let planets = [];
 
-let options = {
+var options = {
   hostname:"localhost",
-  port:8086,
+  port:5500,
   auto_connect: false,
+  supported_objects: ["live.grid"]
 }
 
-let xebra = new Xebra.State(options);
+var xebra = new Xebra.State(options);
+
 
 
 let menuVisible = false;
@@ -62,8 +64,6 @@ function mouseReleased() {
   });
 }
 
-
-
 function showMenu() {
   document.getElementById('menu').classList.remove('hidden');
 }
@@ -104,3 +104,7 @@ class Planet {
 
 xebra.on ("object_added", updateWithObject);
 xebra.on ("object_changed", updateWithObject);
+
+xebraState.on("connection_changed", function (status) {
+  console.log("Connection status:", status);
+});

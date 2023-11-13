@@ -1,9 +1,9 @@
 let planets = [];
-let backgroundColor = 0; // Color de fondo predeterminado
+let backgroundColor = 0; 
+let isBlue = true; 
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  background(backgroundColor);
   const centerX = width / 2;
   const centerY = height / 2;
 
@@ -35,10 +35,17 @@ function mousePressed() {
     }
   });
 
-  // Verifica si el clic fue en el sol (primer planeta)
+  
   if (planets[0].contains(mouseX, mouseY)) {
-    // Cambia el color de fondo al azar
-    backgroundColor = color(random(255), random(255), random(255));
+    
+    if (isBlue) {
+      backgroundColor = color(40, 89, 137); 
+    } else {
+      backgroundColor = color(47, 43, 69); 
+    }
+    
+    
+    isBlue = !isBlue;
   }
 }
 

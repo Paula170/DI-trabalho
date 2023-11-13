@@ -6,3 +6,21 @@ html, body {
 canvas {
   display: block;
 }
+
+#menu {
+  position: center;
+  top: 10px;
+  left: 10px;
+  border: 1px solid #ccc;
+  padding: 10px;
+  display: flex;
+  flex-direction: row;
+}
+
+.hidden {
+  display: none;
+}
+
+button {
+  margin-bottom: 5px;
+}

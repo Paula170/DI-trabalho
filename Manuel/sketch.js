@@ -1,5 +1,16 @@
 let planets = [];
 
+let options = {
+  hostname:"localhost",
+  port:8086,
+  auto_connect: false,
+}
+
+let xebra = new Xebra.State(options);
+
+
+let menuVisible = false;
+
 function setup() {
   createCanvas(windowWidth, windowHeight);
   background(0);
@@ -8,23 +19,33 @@ function setup() {
 
   planets = [
     new Planet(centerX, centerY, 150, color(255, 204, 0)),
-    new Planet(centerX + 100, centerY + 200, 20, color(0, 0, 255)),
-    new Planet(centerX - 180, centerY + 50, 35, color(255, 0, 0)),
-    new Planet(centerX + 260, centerY + 30, 30, color(200, 200, 200)),
-    new Planet(centerX + 340, centerY - 300, 40, color(0, 255, 0)),
-    new Planet(centerX - 420, centerY + 200, 35, color(255, 255, 0)),
-    new Planet(centerX + 500, centerY + 300, 40, color(255, 0, 255)),
-    new Planet(centerX - 580, centerY - 400, 20, color(255, 255, 0)),
-    new Planet(centerX + 660, centerY, 20, color(0, 255, 255)),
+    new Planet(centerX + 100, centerY + 200, 20, color(200)),
+    new Planet(centerX - 180, centerY + 50, 35, color(161, 112, 0)),
+    new Planet(centerX + 260, centerY + 30, 30, color(28, 36, 189)),
+    new Planet(centerX + 340, centerY - 300, 40, color(189, 55, 28)),
+    new Planet(centerX - 420, centerY + 200, 35, color(130, 73, 61)),
+    new Planet(centerX + 500, centerY + 300, 40, color(224, 176, 18)),
+    new Planet(centerX - 580, centerY - 400, 20, color(15, 209, 203)),
+    new Planet(centerX + 660, centerY, 20, color(8, 82, 161)),
   ];
 }
 
 function draw() {
-  background(22, 42, 112);
+  background(84, 88, 209);
   planets.forEach(planet => {
     planet.display();
   });
-}
+    // Check for mouse position to show the menu
+    if (mouseIsPressed && mouseX < 50 && mouseY < 50) {
+      menuVisible = !menuVisible;
+      if (menuVisible) {
+        showMenu();
+      } else {
+        hideMenu();
+      }
+    }
+  }
+
 
 function mousePressed() {
   planets.forEach(planet => {
@@ -39,6 +60,22 @@ function mouseReleased() {
   planets.forEach(planet => {
     planet.dragging = false;
   });
+}
+
+
+
+function showMenu() {
+  document.getElementById('menu').classList.remove('hidden');
+}
+
+function hideMenu() {
+  document.getElementById('menu').classList.add('hidden');
+}
+
+function changeColor(color) {
+  // Add functionality to change color based on the menu selection
+  // For now, just print the selected color to the console
+  console.log(`Selected color: ${color}`);
 }
 
 class Planet {
@@ -63,6 +100,7 @@ class Planet {
       this.y = mouseY - this.offsetY;
     }
   }
-
-  
 }
+
+xebra.on ("object_added", updateWithObject);
+xebra.on ("object_changed", updateWithObject);

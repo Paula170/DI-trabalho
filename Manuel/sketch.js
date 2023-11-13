@@ -2,9 +2,9 @@ let planets = [];
 
 var options = {
   hostname:"localhost",
-  port:5500,
+  port:8086,
   auto_connect: false,
-  supported_objects: ["live.grid"]
+  supported_objects: ["dial"]
 }
 
 var xebra = new Xebra.State(options);
@@ -46,6 +46,7 @@ function draw() {
         hideMenu();
       }
     }
+    
   }
 
 
@@ -78,6 +79,8 @@ function changeColor(color) {
   console.log(`Selected color: ${color}`);
 }
 
+
+
 class Planet {
   constructor(x, y, size, planetColor) {
     this.x = x;
@@ -102,9 +105,11 @@ class Planet {
   }
 }
 
-xebra.on ("object_added", updateWithObject);
-xebra.on ("object_changed", updateWithObject);
+var xebraState = new Xebra.State(options);
+			xebraState.connect();
+			xebraState.on("channel_message_received", function(chan, msg) {
+				if (chan === "toBrowser") {
+					document.getElementById("fromMax").innerHTML = msg;
+				}
+			});
 
-xebraState.on("connection_changed", function (status) {
-  console.log("Connection status:", status);
-});

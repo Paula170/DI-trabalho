@@ -1,8 +1,9 @@
 let planets = [];
+let backgroundColor = 0; // Color de fondo predeterminado
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  background(0);
+  background(backgroundColor);
   const centerX = width / 2;
   const centerY = height / 2;
 
@@ -20,7 +21,7 @@ function setup() {
 }
 
 function draw() {
-  background(0);
+  background(backgroundColor);
   planets.forEach(planet => {
     planet.display();
   });
@@ -33,6 +34,12 @@ function mousePressed() {
       planet.offsetY = mouseY - planet.y;
     }
   });
+
+  // Verifica si el clic fue en el sol (primer planeta)
+  if (planets[0].contains(mouseX, mouseY)) {
+    // Cambia el color de fondo al azar
+    backgroundColor = color(random(255), random(255), random(255));
+  }
 }
 
 function mouseReleased() {

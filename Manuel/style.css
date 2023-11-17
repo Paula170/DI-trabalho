@@ -9,12 +9,13 @@ canvas {
 
 #menu {
   position: center;
-  top: 10px;
+  top: 0px;
   left: 10px;
-  border: 1px solid #ccc;
-  padding: 10px;
+  border: 0px solid #ccc;
+  padding: 0px;
   display: flex;
   flex-direction: row;
+  justify-content: center;
 }
 
 .hidden {

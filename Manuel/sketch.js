@@ -1,6 +1,6 @@
 let planets = [];
 let menuVisible = false;
-/*
+
 var options = {
   hostname: "localhost",
   port: 8086,
@@ -28,17 +28,7 @@ function updateWithObject(object1) {
   }
 }
 
-function updateWithObject(object2) {
-  if (object1.getParamValue("varname") == "saturn"); {
-    saturn = object1.getParamValue("value");
-    if (saturn != null) {
-      //console.log(earth);
-      if (saturn == 2) planets[2].planetStroke = 10;
-      else planets[2].planetStroke = 0;
-    }
-  }
-}
-*/
+
 
 
 
@@ -49,24 +39,25 @@ function setup() {
   const centerY = height / 2;
 
   planets = [
+    //(positionX,positionY,size, color,stroke)
     //SUN
     new Planet(centerX, centerY, 150, color(255, 204, 0), 0),
     //MARS
-    new Planet(centerX + windowWidth/6, centerY + 200, 20, color(200, 0, 0), 0),
-    //the black one
-    new Planet(centerX - windowWidth/4, centerY ,50, color(10, 0, 0), 0),
-    //EARTH(blue one of course)
-    new Planet(centerX + windowWidth/5, centerY + 30, 30, color(28, 36, 189), 0),
-    //jUPITER (the grey big one)
-    new Planet(centerX - windowWidth/3+20, centerY - 300, 40, color(127, 129, 133), 0),
-    //(brown mid)
-    new Planet(centerX - windowWidth/4+200, centerY + 200, 35, color(130, 73, 61), 0),
-    //saturn(big yellow)
-    new Planet(centerX + windowWidth/6+400, centerY + 300, 40, color(224, 176, 18), 0),
-    //Neptune(small light blue)
-    new Planet(centerX + windowWidth/4, centerY - 40, 20, color(15, 209, 203), 0),
-    //small green
-    new Planet(centerX + windowWidth/3, centerY, 20, color(8, 82, 0), 0),
+    new Planet(centerX + windowWidth/6, centerY + 200, 60, color(200, 0, 0), 0),
+    //NEPTUNE
+    new Planet(centerX + windowWidth/2.5, centerY ,70, color(10, 102, 126), 0),
+    //EARTH
+    new Planet(centerX - windowWidth/6, centerY + 30, 70, color(28, 36, 189), 0),
+    //JUPITER 
+    new Planet(centerX + windowWidth/3.5, centerY - 300, 120, color(217, 186, 114), 0),
+    //URA
+    new Planet(centerX - windowWidth/2.5, centerY + 200, 80, color(8, 131, 183), 0),
+    //SATURN 
+    new Planet(centerX - windowWidth/3.5, centerY + 300, 110, color(255, 209, 156), 0),
+    //MERCURY
+    new Planet(centerX + windowWidth/12, centerY - 40, 40, color(233, 151, 22), 0),
+    //VENUS
+    new Planet(centerX - windowWidth/12, centerY, 50, color(197, 68, 37), 0),
   ];
 }
 
@@ -76,7 +67,7 @@ function draw() {
     planet.display();
   });
 
-  /*if (mouseIsPressed) {
+  if (mouseIsPressed) {
     sendToMax("ola");
     mouseIsPressed = false;
   }
@@ -89,7 +80,7 @@ function draw() {
       hideMenu();
     }
   }
-  */
+  
 }
 
 function mousePressed() {

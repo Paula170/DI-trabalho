@@ -1,6 +1,6 @@
 let planets = [];
-let backgroundColor = 0; 
-let isBlue = true; 
+let backgroundColor = 0;
+let isBlue = true;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -23,33 +23,20 @@ function setup() {
 function draw() {
   background(backgroundColor);
   planets.forEach(planet => {
+    planet.update();
     planet.display();
   });
 }
 
 function mousePressed() {
   planets.forEach(planet => {
-    planet.dragging = planet.contains(mouseX, mouseY);
-    if (planet.dragging) {
-      planet.offsetY = mouseY - planet.y;
-    }
+    planet.startDragging();
   });
-
-  
-  if (planets[0].contains(mouseX, mouseY)) {
-    
-    if (isBlue) {
-      backgroundColor = color(40, 89, 137); 
-    } else {
-      backgroundColor = color(47, 43, 69); 
-    }
-    isBlue = !isBlue;
-  }
 }
 
 function mouseReleased() {
   planets.forEach(planet => {
-    planet.dragging = false;
+    planet.stopDragging();
   });
 }
 
@@ -60,7 +47,27 @@ class Planet {
     this.size = size;
     this.planetColor = planetColor;
     this.dragging = false;
-    this.offsetY = 0;
+    this.angle = 0;
+    this.radius = dist(this.x, this.y, width / 2, height / 2); // Distancia al centro para movimiento circular
+  }
+
+  startDragging() {
+    if (this.contains(mouseX, mouseY)) {
+      this.dragging = true;
+    }
+  }
+
+  stopDragging() {
+    this.dragging = false;
+  }
+
+  update() {
+    if (this.dragging) {
+      // Si está siendo arrastrado, actualiza la posición de manera circular
+      this.angle = atan2(mouseY - height / 2, mouseX - width / 2);
+      this.x = width / 2 + this.radius * cos(this.angle);
+      this.y = height / 2 + this.radius * sin(this.angle);
+    }
   }
 
   contains(px, py) {
@@ -71,8 +78,5 @@ class Planet {
   display() {
     fill(this.planetColor);
     ellipse(this.x, this.y, this.size, this.size);
-    if (this.dragging) {
-      this.y = mouseY - this.offsetY;
-    }
   }
 }

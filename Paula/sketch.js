@@ -43,8 +43,6 @@ function mousePressed() {
     } else {
       backgroundColor = color(47, 43, 69); 
     }
-    
-    
     isBlue = !isBlue;
   }
 }

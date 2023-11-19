@@ -1,5 +1,6 @@
 let planets = [];
-let menuVisible = false;
+let backgroundColor = 0; 
+let isBlue = true; 
 
 var options = {
   hostname: "localhost",
@@ -8,8 +9,10 @@ var options = {
 }
 
 var xebra = new Xebra.State(options);
-xebra.on("object_added", updateWithObject);
-xebra.on("object_changed", updateWithObject);
+xebra.on("object_added", updateWithObject1);
+xebra.on("object_changed", updateWithObject1);
+xebra.on("object_added", updateWithObject2);
+xebra.on("object_changed", updateWithObject2);
 xebra.connect();
 
 function sendToMax(val) {
@@ -17,24 +20,30 @@ function sendToMax(val) {
  console.log("enviou");
 }
 
-function updateWithObject(object1) {
+//sends an object from max to p5
+function updateWithObject1(object1) {
   if (object1.getParamValue("varname") == "earth"); {
     earth = object1.getParamValue("value");
     if (earth != null) {
-      //console.log(earth);
-      if (earth == 1) planets[1].planetStroke = 10;
+      if (earth == 3) planets[3].planetStroke = 5;
+      else planets[3].planetStroke = 0;
+    }
+  }
+}
+
+function updateWithObject2(object2) {
+  if (object2.getParamValue("varname") == "mars"); {
+    mars = object2.getParamValue("value");
+    if (mars != null) {
+      if (mars == 1) planets[1].planetStroke = 5;
       else planets[1].planetStroke = 0;
     }
   }
 }
 
-
-
-
-
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  background(0);
+  background(backgroundColor);
   const centerX = width / 2;
   const centerY = height / 2;
 
@@ -67,29 +76,34 @@ function draw() {
     planet.display();
   });
 
+  //send message from p5 to max
   if (mouseIsPressed) {
     sendToMax("ola");
     mouseIsPressed = false;
   }
-  // Check for mouse position to show the menu
-  if (mouseIsPressed && mouseX < 50 && mouseY < 50) {
-    menuVisible = !menuVisible;
-    if (menuVisible) {
-      showMenu();
-    } else {
-      hideMenu();
-    }
-  }
-  
+
 }
 
 function mousePressed() {
+  //drags planets
   planets.forEach(planet => {
     planet.dragging = planet.contains(mouseX, mouseY);
     if (planet.dragging) {
       planet.offsetY = mouseY - planet.y;
     }
   });
+
+  //changes background
+  if (planets[0].contains(mouseX, mouseY)) {
+    
+    if (isBlue) {
+      backgroundColor = color(40, 89, 137); 
+    } else {
+      backgroundColor = color(47, 43, 69); 
+    }
+    
+    isBlue = !isBlue;
+  }
 }
 
 function mouseReleased() {
@@ -105,14 +119,6 @@ function showMenu() {
 function hideMenu() {
   document.getElementById('menu').classList.add('hidden');
 }
-
-function changeColor(color) {
-  // Add functionality to change color based on the menu selection
-  // For now, just print the selected color to the console
-  console.log(`Selected color: ${color}`);
-}
-
-
 
 class Planet {
   constructor(x, y, size, planetColor, planetStroke) {
@@ -139,11 +145,5 @@ class Planet {
       this.y = mouseY - this.offsetY;
     }
   }
-}
-
-function keyPressed() {
-  // Reset alpha value and last toggle time on any key press
-  alphaValue = 50;
-  lastToggleTime = millis();
 }
 

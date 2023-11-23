@@ -12,8 +12,18 @@ let menuVisible = false;
 let menuContent = "";
 let menuType = "";
 
+let angle = 0;
+let widthAxis = 150; // Ancho de la elipse
+let heightAxis = 100; // Altura de la elipse
+let ellipseX, ellipseY;
+let isDragging = false;
+let offsetX, offsetY;
+
+
+
 let menuX;
 let menuY;
+
 let menuWidth = 400;
 let menuHeight = 200;
 
@@ -63,6 +73,8 @@ function setup() {
   gasPlanetsBpmSlider = createSlider(60, 180, 120);
   gasPlanetsRockVolumeSlider = createSlider(0, 1, 0.5, 0.01);
   gasPlanetsGasVolumeSlider = createSlider(0, 1, 0.5, 0.01);
+
+  
 
   bpmSlider.position(menuX + 150, menuY + 45);
   rockVolumeSlider.position(menuX + 150, menuY + 85);
@@ -239,19 +251,22 @@ function mouseReleased() {
 
 class Planet {
   constructor(x, y, size, planetColor, content = "") {
-    this.x = x;
-    this.y = y;
+    this.centerX = x;
+    this.centerY = y;
     this.size = size;
     this.planetColor = planetColor;
     this.dragging = false;
     this.angle = 0;
-    this.radius = dist(this.x, this.y, width / 2, height / 2);
+    this.radius = dist(this.centerX, this.centerY, width / 2, height / 2);
     this.content = content;
   }
 
   startDragging() {
     if (this.contains(mouseX, mouseY)) {
       this.dragging = true;
+      const dx = mouseX - this.centerX;
+      const dy = mouseY - this.centerY;
+      this.angle = atan2(dy, dx);
     }
   }
 
@@ -261,20 +276,23 @@ class Planet {
 
   update() {
     if (this.dragging) {
+      const a = this.radius; 
+      const b = a; 
       this.angle = atan2(mouseY - height / 2, mouseX - width / 2);
-      this.x = width / 2 + this.radius * cos(this.angle);
-      this.y = height / 2 + this.radius * sin(this.angle);
+
+      
+      this.centerX = width / 2 + a * cos(this.angle);
+      this.centerY = height / 2 + b * sin(this.angle);
     }
   }
 
   contains(px, py) {
-    const d = dist(px, py, this.x, this.y);
+    const d = dist(px, py, this.centerX, this.centerY);
     return d < this.size / 2;
   }
 
   display() {
     fill(this.planetColor);
-    ellipse(this.x, this.y, this.size, this.size);
+    ellipse(this.centerX, this.centerY, this.size, this.size);
   }
 }
- 

@@ -1,4 +1,6 @@
+translate(width / 2, height / 2);
 function Star() {
+  
     this.x = random(-width, width);
     this.y = random(-height, height);
     this.z = random(width);
@@ -31,6 +33,7 @@ function Star() {
   
       stroke(255);
       line(px, py, sx, sy);
+      
   
     }
   }

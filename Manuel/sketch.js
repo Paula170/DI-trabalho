@@ -2,6 +2,9 @@ let planets = [];
 let backgroundColor = 0; 
 let isBlue = true; 
 
+let stars = [];
+var speed;
+
 let closeButtonSize = 20;
 let closeButtonX, closeButtonY;
 let rockyCloseButtonX, rockyCloseButtonY;
@@ -20,6 +23,7 @@ let menuHeight = 200;
 let bpmSlider, rockVolumeSlider, gasVolumeSlider;
 let rockyBpmSlider, rockyRockVolumeSlider, rockyGasVolumeSlider;
 let gasPlanetsBpmSlider, gasPlanetsRockVolumeSlider, gasPlanetsGasVolumeSlider;
+
 
 var options = {
   hostname: "localhost",
@@ -102,11 +106,19 @@ function updateWithObject1(object1, param) {
     }
 }
 
+function preLoad(){
+
+}
+
 function setup() {
   createCanvas(windowWidth, windowHeight);
   background(backgroundColor);
   const centerX = width / 2;
   const centerY = height / 2;
+
+  for (var i = 0; i < 800; i++) {
+    stars[i] = new Star();
+  }
   
 
   menuX = (width - menuWidth) / 2;
@@ -386,6 +398,14 @@ class Planet {
   }
 
   display() {
+    speed = map(mouseX/2, 0, width, 1, 3);
+
+    //translate(width / 2, height / 2);
+    for (var i = 0; i < stars.length; i++) {
+      stars[i].update();
+      stars[i].show();
+    }
+    
     stroke(0);
     strokeWeight(this.planetStroke);
     fill(this.planetColor);
@@ -394,6 +414,7 @@ class Planet {
       this.y = mouseY - this.offsetY;
       
     }
+
   }
 }
 

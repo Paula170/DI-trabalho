@@ -9,6 +9,9 @@ let mainMenu;
 let gasMenu;
 let rockMenu;
 
+let round = [];
+
+/*
 var options = {
   hostname: "localhost",
   port: 8086,
@@ -89,6 +92,7 @@ function updateWithObject1(object1, param) {
     }
     }
 }
+*/
 
 function drawStars() {
   push();
@@ -103,7 +107,9 @@ function drawStars() {
 
 //for image load
 function preLoad(){
-
+  for (let i = 0; i < 8; i++){
+    round[i] = loadImage('images/planet' + i + '.png');
+  }
 }
 
 function setup() {
@@ -116,6 +122,7 @@ function setup() {
     stars[i] = new Star();
   }
   
+  //menu types
   mainMenu = new Menu("main","BPM","Main Volume","Wide");
   rockMenu = new Menu("rock","Rock Volume","Gravity","Filter");
   gasMenu = new Menu("gas","Gas Volume","Gravity","Filter");
@@ -125,21 +132,21 @@ function setup() {
     //SUN
     new Planet(0,centerX, centerY, 300, color(255, 204, 0)),
     //MARS 1
-    new Planet(1,centerX + windowWidth/6, centerY + 200, 60, color(200, 0, 0), 0, "Rock"),
+    new Planet(1,centerX + windowWidth/6, centerY + 200, 60, color(200, 0, 0), 0, "Rock", "1"),
     //NEPTUNE 2
-    new Planet(2,centerX + windowWidth/2.5, centerY ,70, color(10, 102, 126), 0, "Gas"),
+    new Planet(2,centerX + windowWidth/2.5, centerY ,70, color(10, 102, 126), 0, "Gas", 2),
     //EARTH 3
-    new Planet(3,centerX - windowWidth/6, centerY + 30, 70, color(28, 36, 189), 0, "Rock"),
+    new Planet(3,centerX - windowWidth/6, centerY + 30, 70, color(28, 36, 189), 0, "Rock", 3),
     //JUPITER 4
-    new Planet(4,centerX + windowWidth/3.5, centerY - 300, 120, color(217, 186, 114), 0, "Gas"),
+    new Planet(4,centerX + windowWidth/3.5, centerY - 300, 120, color(217, 186, 114), 0, "Gas", 4),
     //URA 5
-    new Planet(5,centerX - windowWidth/2.5, centerY + 200, 80, color(8, 131, 183), 0, "Gas"),
+    new Planet(5,centerX - windowWidth/2.5, centerY + 200, 80, color(8, 131, 183), 0, "Gas", 5),
     //SATURN 6
-    new Planet(6,centerX - windowWidth/3.5, centerY + 300, 110, color(255, 209, 156), 0, "Gas"),
+    new Planet(6,centerX - windowWidth/3.5, centerY + 300, 110, color(255, 209, 156), 0, "Gas", 6),
     //MERCURY 7
-    new Planet(7,centerX + windowWidth/12, centerY - 40, 40, color(233, 151, 22), 0, "Rock"),
+    new Planet(7,centerX + windowWidth/12, centerY - 40, 40, color(233, 151, 22), 0, "Rock", 7),
     //VENUS 8
-    new Planet(8,centerX - windowWidth/12, centerY, 50, color(197, 68, 37), 0, "Rock"),
+    new Planet(8,centerX - windowWidth/12, centerY, 50, color(197, 68, 37), 0, "Rock", 8),
   ];
 
 }
@@ -155,19 +162,7 @@ function draw() {
   });
 
 
-  //send message from p5 to max
-  if (mouseIsPressed) {
-    sendToMax("mars " + planets[1].y,);
-    sendToMax("neptune " + planets[2].y);
-    sendToMax("earth " + planets[3].y);
-    sendToMax("jupiter " + planets[4].y);
-    sendToMax("uranus " + planets[5].y);
-    sendToMax("saturn " + planets[6].y);
-    sendToMax("mercury " + planets[7].y);
-    sendToMax("venus " + planets[8].y);
 
-    //mouseIsPressed = false;
-  }
 
 }
 
@@ -214,6 +209,7 @@ class Menu {
     }
   }
 
+   //menu display
   display() {
     if (this.showMenu) {
       fill(255);
@@ -228,12 +224,15 @@ class Menu {
 
       fill(200,0,0);
       circle(this.x+windowWidth/5-windowWidth/150,this.y+windowWidth/150,windowWidth/120);
+      
     }
+    
+   
   }
 }
 
 class Planet {
-  constructor(id,x, y, size, planetColor, planetStroke, content = "") {
+  constructor(id,x, y, size, planetColor, planetStroke, content = "", img = "") {
     this.x = x;
     this.y = y;
     this.size = size;
@@ -244,6 +243,7 @@ class Planet {
     this.content = content;
     this.offsetY = 0;
     this.planeStroke = planetStroke;
+    this.round = img;
 
     if (id == 0) {
       this.draggable = false;
@@ -276,6 +276,8 @@ class Planet {
     this.dragging = false;
   }
 
+ /*
+  planet arcs
   update() {
     if (this.dragging) {
       this.angle = atan2(mouseY - height / 2, mouseX - width / 2);
@@ -283,23 +285,30 @@ class Planet {
       this.y = height / 2 + this.radius * sin(this.angle);
     }
   }
+  */
 
   contains(px, py) {
     const d = dist(px, py, this.x, this.y);
     return d < this.size / 2;
   }
 
+  //planet display
   display() {
     
     stroke(0);
     strokeWeight(this.planetStroke);
+    
     fill(this.planetColor);
-    ellipse(this.x, this.y, this.size, this.size);
+    ellipse(this.x, this.y, this.size, this.size,this.round);
     if (this.dragging) {
       this.y = mouseY - this.offsetY
+     
     }
 
     this.menu.display();
+    
+    //image(this.round,this.x,this.y);
+    
   }
 }
 

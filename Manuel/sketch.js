@@ -9,6 +9,8 @@ let mainMenu;
 let gasMenu;
 let rockMenu;
 
+let round = [];
+
 
 var options = {
   hostname: "localhost",
@@ -25,6 +27,7 @@ xebra.connect();
 
 function sendToMax(val) {
  xebra.sendMessageToChannel("fromBrowser", val);
+  
 
 }
 
@@ -104,7 +107,12 @@ function drawStars() {
 }
 
 //for image load
-function preLoad() {}
+function preLoad() {
+    for (let i = 0; i < 8; i++){
+      round[i] = loadImage('images/planet' + i + '.png');
+    }
+  }
+
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -171,6 +179,7 @@ function draw() {
   }
   pop();
   if(mouseIsPressed){
+    //menu values
     sendToMax("main1 " + mainMenu.vol.value());
     sendToMax("main2 " + mainMenu.gravity.value());
     sendToMax("main3 " + mainMenu.vaccume.value());
@@ -180,6 +189,7 @@ function draw() {
     sendToMax("gas1 " + gasMenu.vol.value());
     sendToMax("gas2 " + gasMenu.gravity.value());
     sendToMax("gas3 " + gasMenu.vaccume.value());
+    //planet values
     sendToMax("mars " + planets[1].y,);
     sendToMax("neptune " + planets[2].y);
     sendToMax("earth " + planets[3].y);
@@ -188,7 +198,9 @@ function draw() {
     sendToMax("saturn " + planets[6].y);
     sendToMax("mercury " + planets[7].y);
     sendToMax("venus " + planets[8].y);
-    sendToMax("sun " + isBlue);
+    
+    //sun in out
+    //sendToMax("sun " + backgroundColor);
     
     mouseIsPressed=false;
     if(dist(mouseX,mouseY,width/2,height-80)<40){
@@ -209,6 +221,8 @@ function draw() {
 
 
 }
+
+if(mouseIsPressed){}
 
 }
 
@@ -262,13 +276,13 @@ class Menu {
       this.y = windowWidth / 200;
     }
     //we will make sliders for vol gravity vaccum
-    this.vol = createSlider(0, 127, 0, 1)
+    this.vol = createSlider(0, 127, 63, 1)
       .hide()
       .size((windowWidth / 5) * 0.65);
-    this.gravity = createSlider(0, 127, 0, 1)
+    this.gravity = createSlider(0, 127, 63, 1)
       .hide()
       .size((windowWidth / 5) * 0.65);
-    this.vaccume = createSlider(0, 127, 0, 1)
+    this.vaccume = createSlider(0, 127, 63, 1)
       .hide()
       .size((windowWidth / 5) * 0.65);
     this.sliders = [this.vol, this.gravity, this.vaccume];
@@ -321,7 +335,7 @@ class Menu {
 }
 
 class Planet {
-  constructor(id, x, y, size, planetColor, planetStroke, content = "") {
+  constructor(id, x, y, size, planetColor, planetStroke, content = "", img) {
     this.x = x;
     this.y = y;
     this.size = size;
@@ -332,6 +346,7 @@ class Planet {
     this.content = content;
     this.offsetY = 0;
     this.planeStroke = planetStroke;
+    this.round = img;
 
     if (id == 0) {
       this.draggable = false;

@@ -180,15 +180,16 @@ function draw() {
   pop();
   if(mouseIsPressed){
     //menu values
-    sendToMax("main1 " + mainMenu.vol.value());
+    //sendToMax("main1 " + mainMenu.vol.value());
     sendToMax("main2 " + mainMenu.gravity.value());
     sendToMax("main3 " + mainMenu.vaccume.value());
-    sendToMax("rock1 " + rockMenu.vol.value());
+    //sendToMax("rock1 " + rockMenu.vol.value());
     sendToMax("rock2 " + rockMenu.gravity.value());
     sendToMax("rock3 " + rockMenu.vaccume.value());
-    sendToMax("gas1 " + gasMenu.vol.value());
+   // sendToMax("gas1 " + gasMenu.vol.value());
     sendToMax("gas2 " + gasMenu.gravity.value());
     sendToMax("gas3 " + gasMenu.vaccume.value());
+
     //planet values
     sendToMax("mars " + planets[1].y,);
     sendToMax("neptune " + planets[2].y);
@@ -200,7 +201,7 @@ function draw() {
     sendToMax("venus " + planets[8].y);
     
     //sun in out
-    //sendToMax("sun " + backgroundColor);
+    sendToMax("sun " + isBlue);
     
     mouseIsPressed=false;
     if(dist(mouseX,mouseY,width/2,height-80)<40){
@@ -279,14 +280,58 @@ class Menu {
     this.vol = createSlider(0, 127, 63, 1)
       .hide()
       .size((windowWidth / 5) * 0.65);
+
+    this.vol.elt.addEventListener("input", function(evt){
+      //console.log("teste " + mainMenu.vol.value());
+      if (this.label == "main") {
+        console.log("main:  " + mainMenu.vol.value());
+        sendToMax("main1 " + mainMenu.vol.value());
+      } else if  (this.label == "rock") {
+        console.log("rock:  " + rockMenu.vol.value());
+        sendToMax("rock1 " + rockMenu.vol.value());
+      } else {
+        console.log("gas:  " + gasMenu.vol.value());
+        sendToMax("gas1 " + gasMenu.vol.value());
+      }
+    }.bind(this));
+
     this.gravity = createSlider(0, 127, 63, 1)
       .hide()
       .size((windowWidth / 5) * 0.65);
-    this.vaccume = createSlider(0, 127, 63, 1)
+
+      this.gravity.elt.addEventListener("input", function(evt){
+        //console.log("teste " + mainMenu.vol.value());
+        if (this.label == "main") {
+          console.log("main:  " + mainMenu.gravity.value());
+          sendToMax("main2 " + mainMenu.gravity.value());
+        } else if  (this.label == "rock") {
+          console.log("rock:  " + rockMenu.gravity.value());
+          sendToMax("rock2 " + rockMenu.gravity.value());
+        } else {
+          console.log("gas:  " + gasMenu.gravity.value());
+          sendToMax("gas2 " + gasMenu.gravity.value());
+        }
+      }.bind(this));
+
+    this.vaccume = createSlider(0, 127, 0, 1)
       .hide()
       .size((windowWidth / 5) * 0.65);
     this.sliders = [this.vol, this.gravity, this.vaccume];
     //so it goes from 0-1 , whose current value is 0.5 and step is 0.01
+
+    this.vaccume.elt.addEventListener("input", function(evt){
+      //console.log("teste " + mainMenu.vol.value());
+      if (this.label == "main") {
+        console.log("main:  " + mainMenu.gravity.value());
+        sendToMax("main3 " + mainMenu.gravity.value());
+      } else if  (this.label == "rock") {
+        console.log("rock:  " + rockMenu.vaccume.value());
+        sendToMax("rock3 " + rockMenu.vaccume.value());
+      } else {
+        console.log("gas:  " + gasMenu.vaccume.value());
+        sendToMax("gas3 " + gasMenu.vaccume.value());
+      }
+    }.bind(this));
 
     this.crossBtn = createButton("x")
       .hide()

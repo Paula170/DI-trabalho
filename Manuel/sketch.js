@@ -422,9 +422,28 @@ class Planet {
 
   update() {
     if (this.dragging) {
-      this.angle = atan2(mouseY - height / 2, mouseX - width / 2);
-      this.x = width / 2 + this.radius * cos(this.angle);
-      this.y = height / 2 + this.radius * sin(this.angle);
+      const a = this.radius; 
+      const e=0.2;
+      const xSquared = pow(this.centerX - width / 2, 2);
+      const ySquared = pow(this.centerY - height / 2, 2);
+
+      const aSquared = pow(this.a, 2);
+      const bSquared = aSquared * (1 - pow(this.e, 2));
+
+      const newX = sqrt((aSquared * bSquared * xSquared) / (bSquared * xSquared + aSquared * ySquared));
+      const newY = sqrt((aSquared * bSquared * ySquared) / (bSquared * xSquared + aSquared * ySquared));
+
+      if (this.centerX - width / 2 < 0) {
+        this.centerX = width / 2 - newX;
+      } else {
+        this.centerX = width / 2 + newX;
+      }
+
+      if (this.centerY - height / 2 < 0) {
+        this.centerY = height / 2 - newY;
+      } else {
+        this.centerY = height / 2 + newY;
+      }
     }
   }
 

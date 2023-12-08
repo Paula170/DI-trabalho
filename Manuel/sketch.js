@@ -395,7 +395,7 @@ class Planet {
     this.radius = dist(this.x, this.y, width / 2, height / 2);
     this.content = content;
     this.offsetY = 0;
-    this.planetStroke = planetStroke;
+    this.planeStroke = planetStroke;
     this.img = img;
     this.eccentricity=0.2;
 

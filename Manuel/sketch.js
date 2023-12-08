@@ -167,6 +167,7 @@ function draw() {
   drawStars();
 
   planets.forEach((planet) => {
+    planet.update();
     planet.display();
   });
   //menu icon
@@ -397,6 +398,7 @@ class Planet {
     this.offsetY = 0;
     this.planetStroke = planetStroke;
     this.img = img;
+    this.eccentricity=0.2;
 
     
     if (id == 0) {
@@ -412,6 +414,9 @@ class Planet {
   startDragging() {
     if (this.contains(mouseX, mouseY) && this.draggable) {
       this.dragging = true;
+      const dx = mouseX - this.x;
+      const dy = mouseY - this.y;
+      this.angle = atan2(dy, dx);
     } else if (this.contains(mouseX, mouseY) && this.draggable == false) {
       if (isBlue) {
         backgroundColor = color(40, 89, 137);
@@ -428,27 +433,16 @@ class Planet {
 
   update() {
     if (this.dragging) {
-      const a = this.radius; 
-      const e=0.2;
-      const xSquared = pow(this.centerX - width / 2, 2);
-      const ySquared = pow(this.centerY - height / 2, 2);
-
-      const aSquared = pow(this.a, 2);
-      const bSquared = aSquared * (1 - pow(this.e, 2));
-
-      const newX = sqrt((aSquared * bSquared * xSquared) / (bSquared * xSquared + aSquared * ySquared));
-      const newY = sqrt((aSquared * bSquared * ySquared) / (bSquared * xSquared + aSquared * ySquared));
-
-      if (this.centerX - width / 2 < 0) {
-        this.centerX = width / 2 - newX;
-      } else {
-        this.centerX = width / 2 + newX;
-      }
-
-      if (this.centerY - height / 2 < 0) {
-        this.centerY = height / 2 - newY;
-      } else {
-        this.centerY = height / 2 + newY;
+      const a = this.radius;
+      const b = a + 100;
+      this.angle = atan2(mouseY - height / 2, mouseX - width / 2);
+      const r = (a * (1 - Math.pow(this.eccentricity, 2))) / (1 + this.eccentricity * Math.cos(this.angle));
+  
+      if (mouseX !== pmouseX || mouseY !== pmouseY) {
+        this.x = width / 2 + a * cos(this.angle);
+        this.y = height / 2 + b * sin(this.angle);
+  
+        console.log("New position: ", this.x, this.y);
       }
     }
   }
@@ -462,23 +456,12 @@ class Planet {
     stroke(0);
     strokeWeight(this.planetStroke);
 
-    if(this.img) {
-      image(this.img,this.x,this.y,this.size*1.05,this.size);
-    }else{
+    // Representación visual
+    if (this.img) {
+      image(this.img, this.x, this.y, this.size * 1.05, this.size);
+    } else {
       fill(this.planetColor);
       ellipse(this.x, this.y, this.size, this.size);
-    }
-    if (this.dragging) {
-      let unit = height/8;
-      if(mouseY<unit){
-        mouseY=unit;
-      }
-      if(mouseY>=height-unit){
-        mouseY = height-unit;
-      }
-      this.yfake= (mouseY - this.offsetY+unit/2);
-      this.y = this.yfake - (this.yfake%unit);
-     
     }
 
     this.menu.display();

@@ -11,7 +11,7 @@ let rockMenu;
 
 let planetImages  = [];
 
-
+/*
 var options = {
   hostname: "localhost",
   port: 8086,
@@ -90,6 +90,7 @@ function updateWithObject1(object1, param) {
     }
     }
 }
+*/
 
 
 function drawStars() {
@@ -184,7 +185,7 @@ function draw() {
   if(mouseIsPressed){
     //menu values
     //sendToMax("main1 " + mainMenu.vol.value());
-    sendToMax("main2 " + mainMenu.gravity.value());
+    /*sendToMax("main2 " + mainMenu.gravity.value());
     sendToMax("main3 " + mainMenu.vaccume.value());
     //sendToMax("rock1 " + rockMenu.vol.value());
     sendToMax("rock2 " + rockMenu.gravity.value());
@@ -206,7 +207,7 @@ function draw() {
     //sun in out
     sendToMax("sun " + backgroundColor.toString());
     
-    
+    */
     mouseIsPressed=false;
     if(dist(mouseX,mouseY,width/2,height-80)<40){
       if(mainMenu.showMenu){

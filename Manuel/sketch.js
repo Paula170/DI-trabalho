@@ -9,7 +9,7 @@ let mainMenu;
 let gasMenu;
 let rockMenu;
 
-let planetImages  = [];
+let round = [];
 
 
 var options = {
@@ -21,10 +21,13 @@ var options = {
 var xebra = new Xebra.State(options);
 xebra.on("object_added", updateWithObject1);
 xebra.on("object_changed", updateWithObject1);
+//xebra.on("object_added", updateWithObject2);
+//xebra.on("object_changed", updateWithObject2);
 xebra.connect();
 
 function sendToMax(val) {
  xebra.sendMessageToChannel("fromBrowser", val);
+  
 
 }
 
@@ -104,16 +107,11 @@ function drawStars() {
 }
 
 //for image load
-function preload() {
-  planetImages.push(loadImage("images/mars.png"));
-  planetImages.push(loadImage("images/neptune.png"));
-  planetImages.push(loadImage("images/earth.png"));
-  planetImages.push(loadImage("images/jupiter.png"));
-  planetImages.push(loadImage("images/uranus.png"));
-  planetImages.push(loadImage("images/saturn.png"));
-  planetImages.push(loadImage("images/mercury.png")); 
-  planetImages.push(loadImage("images/venus.png")); 
-}
+function preLoad() {
+    for (let i = 0; i < 8; i++){
+      round[i] = loadImage('images/planet' + i + '.png');
+    }
+  }
 
 
 function setup() {
@@ -136,26 +134,25 @@ function setup() {
     //SUN
     new Planet(0, centerX, centerY, 300, color(255, 204, 0)),
     //MARS 1
-    new Planet(1, centerX + windowWidth / 6, centerY + 200, 60, color(200, 0, 0), 0,"Rock", planetImages[0]),
+    new Planet(1, centerX + windowWidth / 6, centerY + 200, 60, color(200, 0, 0), 0,"Rock"),
     //NEPTUNE 2
-    new Planet(2, centerX + windowWidth / 2.5, centerY, 70, color(10, 102, 126), 0, "Gas", planetImages[1]),
+    new Planet(2, centerX + windowWidth / 2.5, centerY, 70, color(10, 102, 126), 0, "Gas"),
     //EARTH 3
-    new Planet(3, centerX - windowWidth / 6, centerY + 30, 70,color(28, 36, 189),0,"Rock", planetImages[2]),
+    new Planet(3, centerX - windowWidth / 6, centerY + 30, 70,color(28, 36, 189),0,"Rock"),
     //JUPITER 4
-    new Planet(4,centerX + windowWidth / 3.5,centerY - 300,120,color(217, 186, 114),0,"Gas", planetImages[3]),
+    new Planet(4,centerX + windowWidth / 3.5,centerY - 300,120,color(217, 186, 114),0,"Gas"),
     //URA 5
-    new Planet(5,centerX - windowWidth / 2.5,centerY + 200, 80, color(8, 131, 183), 0, "Gas", planetImages[4]),
+    new Planet(5,centerX - windowWidth / 2.5,centerY + 200, 80, color(8, 131, 183), 0, "Gas"),
     //SATURN 6
-    new Planet(6, centerX - windowWidth / 3.5, centerY + 300, 110, color(255, 209, 156), 0,"Gas", planetImages[5]),
+    new Planet(6, centerX - windowWidth / 3.5, centerY + 300, 110, color(255, 209, 156), 0,"Gas"),
     //MERCURY 7
-    new Planet(7, centerX + windowWidth / 12, centerY - 40, 40, color(233, 151, 22), 0, "Rock", planetImages[6]),
+    new Planet(7, centerX + windowWidth / 12, centerY - 40, 40, color(233, 151, 22), 0, "Rock"),
     //VENUS 8
-    new Planet(8,centerX - windowWidth / 12, centerY, 50, color(197, 68, 37), 0, "Rock", planetImages[7]),
+    new Planet(8,centerX - windowWidth / 12, centerY, 50, color(197, 68, 37), 0, "Rock"),
   ];
 
   //making text centered to cordinated
   textAlign(CENTER, CENTER);
-  imageMode(CENTER,CENTER);
 }
 
 function draw() {
@@ -205,8 +202,7 @@ function draw() {
     sendToMax("venus " + planets[8].y);
     
     //sun in out
-    sendToMax("sun " + backgroundColor.toString());
-    
+    sendToMax("sun " + isBlue);
     
     mouseIsPressed=false;
     if(dist(mouseX,mouseY,width/2,height-80)<40){
@@ -454,13 +450,10 @@ class Planet {
   display() {
     stroke(0);
     strokeWeight(this.planetStroke);
-
-    // Representación visual
-    if (this.img) {
-      image(this.img, this.x, this.y, this.size * 1.05, this.size);
-    } else {
-      fill(this.planetColor);
-      ellipse(this.x, this.y, this.size, this.size);
+    fill(this.planetColor);
+    ellipse(this.x, this.y, this.size, this.size);
+    if (this.dragging) {
+      this.y = mouseY - this.offsetY;
     }
 
     this.menu.display();

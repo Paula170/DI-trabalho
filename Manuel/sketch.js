@@ -1,6 +1,9 @@
 let planets = [];
 let backgroundColor = 0;
+
 let isBlue = false;
+let prevBackgroundColor = backgroundColor;
+let prevIsBlue = false; 
 
 let stars = [];
 var speed;
@@ -9,35 +12,21 @@ let mainMenu;
 let gasMenu;
 let rockMenu;
 
-let round = [];
-
 
 var options = {
   hostname: "localhost",
   port: 8086,
   auto_connect: false,
 }
-
 var xebra = new Xebra.State(options);
 xebra.on("object_added", updateWithObject1);
 xebra.on("object_changed", updateWithObject1);
-//xebra.on("object_added", updateWithObject2);
-//xebra.on("object_changed", updateWithObject2);
 xebra.connect();
-
 function sendToMax(val) {
  xebra.sendMessageToChannel("fromBrowser", val);
-  
-
 }
-
 //sends an object from max to p5
 function updateWithObject1(object1, param) {
-  // console.log(object1)
-  // console.log(param)
-   //console.log(object1.getParamValue("varname"))
-   //console.log(object1.getParamValue("value"))
-
   if (object1.getParamValue("varname") == "earth") {
     earth = object1.getParamValue("value");
     if (earth != null) {
@@ -46,72 +35,75 @@ function updateWithObject1(object1, param) {
   } else if (object1.getParamValue("varname") == "mars") {
     mars = object1.getParamValue("value");
     if (mars != null) {
-      if (mars == 1) planets[1].planetStroke = 5;
+      if (mars == 1) planets[1].planetStroke = 255;
       else planets[1].planetStroke = 0;
     }
   }
      else if (object1.getParamValue("varname") == "jupiter") {
     jupiter = object1.getParamValue("value");
     if (jupiter != null) {
-      if (jupiter == 1) planets[4].planetStroke = 5;
+      if (jupiter == 1) planets[4].planetStroke = 255;
       else planets[4].planetStroke = 0;
     }
   }
      else if (object1.getParamValue("varname") == "neptune") {
       neptune = object1.getParamValue("value");
     if (neptune != null) {
-      if (neptune == 1) planets[2].planetStroke = 5;
+      if (neptune == 1) planets[2].planetStroke = 255;
       else planets[2].planetStroke = 0;
     }
   }
     else if (object1.getParamValue("varname") == "uranus") {
     uranus = object1.getParamValue("value");
     if (uranus != null) {
-      if (uranus == 1) planets[5].planetStroke = 5;
+      if (uranus == 1) planets[5].planetStroke = 255;
       else planets[5].planetStroke = 0;
     }
   }
     else if (object1.getParamValue("varname") == "mercury") {
       mercury = object1.getParamValue("value");
     if (mercury != null) {
-      if (mercury == 1) planets[7].planetStroke = 5;
+      if (mercury == 1) planets[7].planetStroke = 255;
       else planets[7].planetStroke = 0;
     }
     }
     else if (object1.getParamValue("varname") == "venus") {
     venus = object1.getParamValue("value");
     if (venus != null) {
-    if (venus == 1) planets[8].planetStroke = 5;
+    if (venus == 1) planets[8].planetStroke = 255;
     else planets[8].planetStroke = 0;
     }
     }
     else if (object1.getParamValue("varname") == "saturn") {
       saturn = object1.getParamValue("value");
     if (saturn != null) {
-      if (saturn == 1) planets[6].planetStroke = 5;
+      if (saturn == 1) planets[6].planetStroke = 255;
       else planets[6].planetStroke = 0;
     }
     }
 }
 
-
+let planetImages  = [];
 function drawStars() {
   push();
   translate(width / 2, height / 2);
-
   for (var i = 0; i < stars.length; i++) {
     stars[i].update();
     stars[i].show();
   }
   pop();
 }
-
 //for image load
-function preLoad() {
-    for (let i = 0; i < 8; i++){
-      round[i] = loadImage('images/planet' + i + '.png');
-    }
-  }
+function preload() {
+  planetImages.push(loadImage("images/mars.png"));
+  planetImages.push(loadImage("images/neptune.png"));
+  planetImages.push(loadImage("images/earth.png"));
+  planetImages.push(loadImage("images/jupiter.png"));
+  planetImages.push(loadImage("images/uranus.png"));
+  planetImages.push(loadImage("images/saturn.png"));
+  planetImages.push(loadImage("images/mercury.png")); 
+  planetImages.push(loadImage("images/venus.png")); 
+}
 
 
 function setup() {
@@ -119,51 +111,46 @@ function setup() {
   backgroundColor = color(40, 89, 137);
   const centerX = width / 2;
   const centerY = height / 2;
-
   for (var i = 0; i < 800; i++) {
     stars[i] = new Star();
   }
 
   //menu types
-  mainMenu = new Menu("main", "BPM", "Main Volume", "Wide");
-  rockMenu = new Menu("rock", "Rock Volume", "Gravity", "Filter");
-  gasMenu = new Menu("gas", "Gas Volume", "Gravity", "Filter");
-
+  mainMenu = new Menu("main", "BPM", "Main Volume", "Wide",["volume", "BPM", "vaccume"]);
+  rockMenu = new Menu("rock", "Rock Volume", "Gravity", "Filter",["volume", "slow-mo", "signal"]);
+  gasMenu = new Menu("gas", "Gas Volume", "Gravity", "Filter",["volume", "slow-mo", "glitch"]);
   planets = [
     //(positionX,positionY,size, color,stroke)
     //SUN
     new Planet(0, centerX, centerY, 300, color(255, 204, 0)),
     //MARS 1
-    new Planet(1, centerX + windowWidth / 6, centerY + 200, 60, color(200, 0, 0), 0,"Rock"),
+    new Planet(1, centerX + windowWidth / 6, centerY + 200, 60, color(200, 0, 0), 0,"Rock", planetImages[0]),
     //NEPTUNE 2
-    new Planet(2, centerX + windowWidth / 2.5, centerY, 70, color(10, 102, 126), 0, "Gas"),
+    new Planet(2, centerX + windowWidth / 2.5, centerY, 70, color(10, 102, 126), 0, "Gas", planetImages[1]),
     //EARTH 3
-    new Planet(3, centerX - windowWidth / 6, centerY + 30, 70,color(28, 36, 189),0,"Rock"),
+    new Planet(3, centerX - windowWidth / 6, centerY + 30, 70,color(28, 36, 189),0,"Rock", planetImages[2]),
     //JUPITER 4
-    new Planet(4,centerX + windowWidth / 3.5,centerY - 300,120,color(217, 186, 114),0,"Gas"),
+    new Planet(4,centerX + windowWidth / 3.5,centerY - 300,120,color(217, 186, 114),0,"Gas", planetImages[3]),
     //URA 5
-    new Planet(5,centerX - windowWidth / 2.5,centerY + 200, 80, color(8, 131, 183), 0, "Gas"),
+    new Planet(5,centerX - windowWidth / 2.5,centerY + 200, 80, color(8, 131, 183), 0, "Gas", planetImages[4]),
     //SATURN 6
-    new Planet(6, centerX - windowWidth / 3.5, centerY + 300, 110, color(255, 209, 156), 0,"Gas"),
+    new Planet(6, centerX - windowWidth / 3.5, centerY + 300, 110, color(255, 209, 156), 0,"Gas", planetImages[5]),
     //MERCURY 7
-    new Planet(7, centerX + windowWidth / 12, centerY - 40, 40, color(233, 151, 22), 0, "Rock"),
+    new Planet(7, centerX + windowWidth / 12, centerY - 40, 40, color(233, 151, 22), 0, "Rock", planetImages[6]),
     //VENUS 8
-    new Planet(8,centerX - windowWidth / 12, centerY, 50, color(197, 68, 37), 0, "Rock"),
+    new Planet(8,centerX - windowWidth / 12, centerY, 50, color(197, 68, 37), 0, "Rock", planetImages[7]),
   ];
-
   //making text centered to cordinated
   textAlign(CENTER, CENTER);
+  imageMode(CENTER,CENTER);
 }
-
 function draw() {
-
   background(backgroundColor);
 
   speed = map(mainMenu.gravity.value(), 0, 127, 1, 50);
   drawStars();
 
   planets.forEach((planet) => {
-    planet.update();
     planet.display();
   });
   //menu icon
@@ -180,17 +167,17 @@ function draw() {
   }
   pop();
   if(mouseIsPressed){
+    
     //menu values
-    //sendToMax("main1 " + mainMenu.vol.value());
+    sendToMax("main1 " + mainMenu.vol.value());
     sendToMax("main2 " + mainMenu.gravity.value());
     sendToMax("main3 " + mainMenu.vaccume.value());
-    //sendToMax("rock1 " + rockMenu.vol.value());
+    sendToMax("rock1 " + rockMenu.vol.value());
     sendToMax("rock2 " + rockMenu.gravity.value());
     sendToMax("rock3 " + rockMenu.vaccume.value());
-   // sendToMax("gas1 " + gasMenu.vol.value());
+    sendToMax("gas1 " + gasMenu.vol.value());
     sendToMax("gas2 " + gasMenu.gravity.value());
     sendToMax("gas3 " + gasMenu.vaccume.value());
-
     //planet values
     sendToMax("mars " + planets[1].y,);
     sendToMax("neptune " + planets[2].y);
@@ -202,7 +189,9 @@ function draw() {
     sendToMax("venus " + planets[8].y);
     
     //sun in out
-    sendToMax("sun " + isBlue);
+    sendToMax("sun " + backgroundColor.toString());
+    
+    
     
     mouseIsPressed=false;
     if(dist(mouseX,mouseY,width/2,height-80)<40){
@@ -220,20 +209,20 @@ function draw() {
         mainMenu.crossBtn.show();
       }
     }
-
-
+    const isBlue = JSON.stringify(backgroundColor.levels) === JSON.stringify([40, 89, 137, 255]);
+    if (prevIsBlue !== isBlue) {
+      console.log('Background color changed:', isBlue);
+      sendToMax("sun " + isBlue);
+      prevIsBlue = isBlue; // Update the previous condition
+    }
 }
-
 if(mouseIsPressed){}
-
 }
-
 function mousePressed() {
   planets.forEach((planet) => {
     planet.startDragging();
   });
 }
-
 function doubleClicked() {
   planets.forEach((planet) => {
     if (planet.contains(mouseX, mouseY) && planet.menu!=mainMenu) {
@@ -253,15 +242,13 @@ function doubleClicked() {
     }
   });
 }
-
 function mouseReleased() {
   planets.forEach((planet) => {
     planet.dragging = false;
   });
 }
-
 class Menu {
-  constructor(label, l1, l2, l3) {
+  constructor(label, l1, l2, l3,names=["volume", "gravity", "vaccume"]) {
     this.l1 = l1;
     this.l2 = l2;
     this.l3 = l3;
@@ -281,7 +268,6 @@ class Menu {
     this.vol = createSlider(0, 127, 63, 1)
       .hide()
       .size((windowWidth / 5) * 0.65);
-
     this.vol.elt.addEventListener("input", function(evt){
       //console.log("teste " + mainMenu.vol.value());
       if (this.label == "main") {
@@ -295,11 +281,9 @@ class Menu {
         sendToMax("gas1 " + gasMenu.vol.value());
       }
     }.bind(this));
-
     this.gravity = createSlider(0, 127, 63, 1)
       .hide()
       .size((windowWidth / 5) * 0.65);
-
       this.gravity.elt.addEventListener("input", function(evt){
         //console.log("teste " + mainMenu.vol.value());
         if (this.label == "main") {
@@ -313,13 +297,11 @@ class Menu {
           sendToMax("gas2 " + gasMenu.gravity.value());
         }
       }.bind(this));
-
     this.vaccume = createSlider(0, 127, 0, 1)
       .hide()
       .size((windowWidth / 5) * 0.65);
     this.sliders = [this.vol, this.gravity, this.vaccume];
     //so it goes from 0-1 , whose current value is 0.5 and step is 0.01
-
     this.vaccume.elt.addEventListener("input", function(evt){
       //console.log("teste " + mainMenu.vol.value());
       if (this.label == "main") {
@@ -345,8 +327,8 @@ class Menu {
       this.vaccume.hide();
       this.crossBtn.hide();
     });
+    this.names= names;
   }
-
   display() {
     if (this.showMenu) {
       fill(40);
@@ -362,7 +344,7 @@ class Menu {
         this.y + (windowHeight / 5) * 0.2
       );
       textSize(12);
-      let names = ["volume", "gravity", "vaccume"];
+      let names = this.names;
       for (let i = 0; i < 3; i++) {
         let x = this.x + (windowWidth / 5) * 0.3;
         let y =
@@ -379,9 +361,8 @@ class Menu {
     }
   }
 }
-
 class Planet {
-  constructor(id, x, y, size, planetColor, planetStroke, content = "", img) {
+  constructor(id, x, y, size, planetColor, planetStroke, content = "",img = undefined) {
     this.x = x;
     this.y = y;
     this.size = size;
@@ -393,9 +374,11 @@ class Planet {
     this.offsetY = 0;
     this.planeStroke = planetStroke;
     this.img = img;
-    this.eccentricity=0.2;
 
-    
+    if(this.img){
+      this.borderImg = makeWhiteBorder(img);
+    }
+
     if (id == 0) {
       this.draggable = false;
       this.menu = mainMenu;
@@ -404,58 +387,107 @@ class Planet {
       if (content == "Rock") this.menu = rockMenu;
       else this.menu = gasMenu;
     }
+    this.stepChange = false;
+    this.yPrev = this.y;
   }
-
   startDragging() {
-    if (this.contains(mouseX, mouseY) && this.draggable) {
-      this.dragging = true;
-      const dx = mouseX - this.x;
-      const dy = mouseY - this.y;
-      this.angle = atan2(dy, dx);
-    } else if (this.contains(mouseX, mouseY) && this.draggable == false) {
-      if (isBlue) {
-        backgroundColor = color(40, 89, 137);
-      } else {
-        backgroundColor = color(47, 43, 69);
+    
+      if (this.contains(mouseX, mouseY) && this.draggable) {
+        this.dragging = true;
+      } else if (this.contains(mouseX, mouseY) && !this.draggable) {
+        if (isBlue) {
+          backgroundColor = color(40, 89, 137);
+        } else {
+          backgroundColor = color(47, 43, 69);
+        }
       }
-    }
-    isBlue = !isBlue;
+    isBlue=!isBlue;
   }
-
+  
   stopDragging() {
     this.dragging = false;
   }
-
+  /*
   update() {
     if (this.dragging) {
-      const a = this.radius;
-      const b = a + 100;
-      this.angle = atan2(mouseY - height / 2, mouseX - width / 2);
-      const r = (a * (1 - Math.pow(this.eccentricity, 2))) / (1 + this.eccentricity * Math.cos(this.angle));
-  
-      if (mouseX !== pmouseX || mouseY !== pmouseY) {
-        this.x = width / 2 + a * cos(this.angle);
-        this.y = height / 2 + b * sin(this.angle);
-  
-        console.log("New position: ", this.x, this.y);
+      const a = this.radius; 
+      const e=0.2;
+      const xSquared = pow(this.centerX - width / 2, 2);
+      const ySquared = pow(this.centerY - height / 2, 2);
+      const aSquared = pow(this.a, 2);
+      const bSquared = aSquared * (1 - pow(this.e, 2));
+      const newX = sqrt((aSquared * bSquared * xSquared) / (bSquared * xSquared + aSquared * ySquared));
+      const newY = sqrt((aSquared * bSquared * ySquared) / (bSquared * xSquared + aSquared * ySquared));
+      if (this.centerX - width / 2 < 0) {
+        this.centerX = width / 2 - newX;
+      } else {
+        this.centerX = width / 2 + newX;
+      }
+      if (this.centerY - height / 2 < 0) {
+        this.centerY = height / 2 - newY;
+      } else {
+        this.centerY = height / 2 + newY;
       }
     }
   }
-
+  */
   contains(px, py) {
     const d = dist(px, py, this.x, this.y);
     return d < this.size / 2;
   }
-
   display() {
     stroke(0);
-    strokeWeight(this.planetStroke);
-    fill(this.planetColor);
-    ellipse(this.x, this.y, this.size, this.size);
-    if (this.dragging) {
-      this.y = mouseY - this.offsetY;
+   // strokeWeight(this.planetStroke);
+    
+    if(this.img) {
+      //function to make the image white and draw before it so it acts as a border
+      
+      image(this.borderImg,this.x,this.y,this.size*1.05*1.1,this.size*1.1);
+      image(this.img,this.x,this.y,this.size*1.05,this.size);
+    }else{
+      fill(this.planetColor);
+      ellipse(this.x, this.y, this.size, this.size);
     }
+    if (this.dragging) {
+      let unit = height/8;
+      if(mouseY<unit){
+        mouseY=unit;
+      }
+      if(mouseY>=height-unit){
+        mouseY = height-unit;
+      }
+      this.yfake= (mouseY - this.offsetY+unit/2);
+      this.y = this.yfake - (this.yfake%unit);
+      if(this.yPrev!=this.y){
+        this.yPrev=this.y;
+        this.stepChange=true;
+      }
+      if(this.stepChange){
+        console.log(this.y/unit);//here is the step change even happens, if supposed you where to add event listner change to the planet steps
+        this.stepChange=false;
+      }
+    }
+    
 
     this.menu.display();
   }
+}
+function makeWhiteBorder(img){
+  let res = createImage(img.width,img.height);
+  img.loadPixels();
+  res.loadPixels();
+  for(let x =0;x<img.width;x++){
+    for(let y=0;y<img.height;y++){
+      let index = (x + y * img.width) * 4;
+      if(img.pixels[index+3]>0){
+        res.pixels[index]= 255;
+        res.pixels[index+1]= 255;
+        res.pixels[index+2]= 255;
+        res.pixels[index+3]= 255;
+      }
+    }
+  }
+  res.updatePixels();
+  img.updatePixels();
+  return res;
 }

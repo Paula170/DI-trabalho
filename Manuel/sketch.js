@@ -13,9 +13,9 @@ let gasMenu;
 let rockMenu;
 
 //start stop menus
-let isStartScreen = true; // Variable to track if it's the start screen
+/*let isStartScreen = true; // Variable to track if it's the start screen
 let arrowButton; // Arrow button object
-
+*/
 
 var options = {
   hostname: "localhost",
@@ -34,57 +34,58 @@ function updateWithObject1(object1, param) {
   if (object1.getParamValue("varname") == "earth") {
     earth = object1.getParamValue("value");
     if (earth != null) {
-      planets[3].planetStroke = earth*5;
+      if (earth == 1) planets[3].planetStroke = 150;
+      else planets[3].planetStroke = 255;
     }
   } else if (object1.getParamValue("varname") == "mars") {
     mars = object1.getParamValue("value");
     if (mars != null) {
-      if (mars == 1) planets[1].planetStroke = 255;
-      else planets[1].planetStroke = 0;
+      if (mars == 1) planets[1].planetStroke = 150;
+      else planets[1].planetStroke = 255;
     }
   }
      else if (object1.getParamValue("varname") == "jupiter") {
-    jupiter = object1.getParamValue("value");
+      jupiter = object1.getParamValue("value");
     if (jupiter != null) {
-      if (jupiter == 1) planets[4].planetStroke = 255;
-      else planets[4].planetStroke = 0;
+      if (jupiter == 1) planets[4].planetStroke = 150;
+      else planets[4].planetStroke = 255;
     }
   }
      else if (object1.getParamValue("varname") == "neptune") {
       neptune = object1.getParamValue("value");
     if (neptune != null) {
-      if (neptune == 1) planets[2].planetStroke = 255;
-      else planets[2].planetStroke = 0;
+      if (neptune == 1) planets[2].planetStroke = 150;
+      else planets[2].planetStroke = 255;
     }
   }
     else if (object1.getParamValue("varname") == "uranus") {
-    uranus = object1.getParamValue("value");
+      uranus = object1.getParamValue("value");
     if (uranus != null) {
-      if (uranus == 1) planets[5].planetStroke = 255;
-      else planets[5].planetStroke = 0;
+      if (uranus == 1) planets[5].planetStroke = 150;
+      else planets[5].planetStroke = 255;
     }
   }
     else if (object1.getParamValue("varname") == "mercury") {
       mercury = object1.getParamValue("value");
     if (mercury != null) {
-      if (mercury == 1) planets[7].planetStroke = 255;
-      else planets[7].planetStroke = 0;
+      if (mercury == 1) planets[7].planetStroke = 150;
+      else planets[7].planetStroke = 255;
     }
-    }
+  }
     else if (object1.getParamValue("varname") == "venus") {
-    venus = object1.getParamValue("value");
+      venus = object1.getParamValue("value");
     if (venus != null) {
-    if (venus == 1) planets[8].planetStroke = 255;
-    else planets[8].planetStroke = 0;
+    if (venus == 1) planets[8].planetStroke = 150;
+    else planets[8].planetStroke = 255;
     }
-    }
+  }
     else if (object1.getParamValue("varname") == "saturn") {
       saturn = object1.getParamValue("value");
     if (saturn != null) {
-      if (saturn == 1) planets[6].planetStroke = 255;
-      else planets[6].planetStroke = 0;
+      if (saturn == 1) planets[6].planetStroke = 150;
+      else planets[6].planetStroke = 255;
     }
-    }
+  }
 }
 
 let planetImages  = [];
@@ -120,7 +121,7 @@ function setup() {
   }
 
   //menu types
-  mainMenu = new Menu("main", "BPM", "Main Volume", "Wide",["volume", "BPM", "vaccume"]);
+  mainMenu = new Menu("main", "BPM", "Main Volume", "Wide",["volume", "BPM", "more"]);
   rockMenu = new Menu("rock", "Rock Volume", "Gravity", "Filter",["volume", "slow-mo", "signal"]);
   gasMenu = new Menu("gas", "Gas Volume", "Gravity", "Filter",["volume", "slow-mo", "glitch"]);
   planets = [
@@ -199,7 +200,11 @@ function draw() {
     //sendToMax("sun " + isBlue);
     //makeWhiteBorder.display();
     
-    
+    let names = ["mars","neptune","earth","jupiter","uranus","saturn","mercury","venus"];
+    for(let i=0;i<names.length;i++){
+      let p  = planets[i+1];
+      sendToMax(names[i]+" "+floor(p.y/(height/8))+" "+p.planetStroke);
+    }
     mouseIsPressed=false;
     if(dist(mouseX,mouseY,width/2,height-80)<40){
       if(mainMenu.showMenu){
@@ -312,8 +317,8 @@ class Menu {
     this.vaccume.elt.addEventListener("input", function(evt){
       //console.log("teste " + mainMenu.vol.value());
       if (this.label == "main") {
-        console.log("main:  " + mainMenu.gravity.value());
-        sendToMax("main3 " + mainMenu.gravity.value());
+        console.log("main:  " + mainMenu.vaccume.value());
+        sendToMax("main3 " + mainMenu.vaccume.value());
       } else if  (this.label == "rock") {
         console.log("rock:  " + rockMenu.vaccume.value());
         sendToMax("rock3 " + rockMenu.vaccume.value());
@@ -379,11 +384,14 @@ class Planet {
     this.radius = dist(this.x, this.y, width / 2, height / 2);
     this.content = content;
     this.offsetY = 0;
-    this.planeStroke = planetStroke;
+    //this.planeStroke = planetStroke;
+    if(img){
+      this.planetStroke = planetStroke;
+    }
     this.img = img;
 
     if(this.img){
-      this.borderImg = makeWhiteBorder(img);
+      this.borderImg = makeWhiteBorder(img,this.planetStroke);
     }
 
     if (id == 0) {
@@ -420,11 +428,12 @@ class Planet {
   }
   display() {
     stroke(0);
-   // strokeWeight(this.planetStroke);
+    //strokeWeight(this.planetStroke);
     
     if(this.img) {
       //function to make the image white and draw before it so it acts as a border
       
+      tint(this.planetStroke);
       image(this.borderImg,this.x,this.y,this.size*1.05*1.1,this.size*1.1);
       image(this.img,this.x,this.y,this.size*1.05,this.size);
     }else{
@@ -475,15 +484,16 @@ function makeWhiteBorder(img,planetStroke){
         res.pixels[index]= 255;
         res.pixels[index+1]= 255;
         res.pixels[index+2]= 255;
-        res.pixels[index+3]= planetStroke;
+        res.pixels[index+3]= 0;
       }
     }
   }
+  
   res.updatePixels();
   img.updatePixels();
   return res;
 }
-
+/*
 class ArrowButton {
   constructor(x, y, size) {
     this.x = x;
@@ -506,4 +516,4 @@ class ArrowButton {
       py > this.y - this.size / 2 &&
       py < this.y + this.size / 2;
   }
-}
+}*/

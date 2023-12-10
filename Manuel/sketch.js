@@ -185,18 +185,19 @@ function draw() {
     sendToMax("gas2 " + gasMenu.gravity.value());
     sendToMax("gas3 " + gasMenu.vaccume.value());
     //planet values
-    sendToMax("mars " + planets[1].y,);
-    sendToMax("neptune " + planets[2].y);
-    sendToMax("earth " + planets[3].y);
-    sendToMax("jupiter " + planets[4].y);
-    sendToMax("uranus " + planets[5].y);
-    sendToMax("saturn " + planets[6].y);
-    sendToMax("mercury " + planets[7].y);
-    sendToMax("venus " + planets[8].y);
-    
+    /*
+    sendToMax("mars " + floor(planets[1].y/(height/8)));
+    sendToMax("neptune " + floor(planets[2].y/(height/8)));
+    sendToMax("earth " + floor(planets[3].y/(height/8)));
+    sendToMax("jupiter " + floor(planets[4].y/(height/8)));
+    sendToMax("uranus " + floor(planets[5].y/(height/8)));
+    sendToMax("saturn " + floor(planets[6].y/(height/8)));
+    sendToMax("mercury " + floor(planets[7].y/(height/8)));
+    sendToMax("venus " + floor(planets[8].y/(height/8)));
+    */
     //sun in out
     //sendToMax("sun " + isBlue);
-    
+    //makeWhiteBorder.display();
     
     
     mouseIsPressed=false;
@@ -413,30 +414,6 @@ class Planet {
   stopDragging() {
     this.dragging = false;
   }
-  /*
-  update() {
-    if (this.dragging) {
-      const a = this.radius; 
-      const e=0.2;
-      const xSquared = pow(this.centerX - width / 2, 2);
-      const ySquared = pow(this.centerY - height / 2, 2);
-      const aSquared = pow(this.a, 2);
-      const bSquared = aSquared * (1 - pow(this.e, 2));
-      const newX = sqrt((aSquared * bSquared * xSquared) / (bSquared * xSquared + aSquared * ySquared));
-      const newY = sqrt((aSquared * bSquared * ySquared) / (bSquared * xSquared + aSquared * ySquared));
-      if (this.centerX - width / 2 < 0) {
-        this.centerX = width / 2 - newX;
-      } else {
-        this.centerX = width / 2 + newX;
-      }
-      if (this.centerY - height / 2 < 0) {
-        this.centerY = height / 2 - newY;
-      } else {
-        this.centerY = height / 2 + newY;
-      }
-    }
-  }
-  */
   contains(px, py) {
     const d = dist(px, py, this.x, this.y);
     return d < this.size / 2;
@@ -469,7 +446,16 @@ class Planet {
         this.stepChange=true;
       }
       if(this.stepChange){
-        console.log(this.y/unit);//here is the step change even happens, if supposed you where to add event listner change to the planet steps
+        console.log(this.y/unit);
+        sendToMax("mars " + floor(planets[1].y/(height/8)));
+        sendToMax("neptune " + floor(planets[2].y/(height/8)));
+        sendToMax("earth " + floor(planets[3].y/(height/8)));
+        sendToMax("jupiter " + floor(planets[4].y/(height/8)));
+        sendToMax("uranus " + floor(planets[5].y/(height/8)));
+        sendToMax("saturn " + floor(planets[6].y/(height/8)));
+        sendToMax("mercury " + floor(planets[7].y/(height/8)));
+        sendToMax("venus " + floor(planets[8].y/(height/8)));
+        //here is the step change even happens, if supposed you where to add event listner change to the planet steps
         this.stepChange=false;
       }
     }
@@ -478,7 +464,7 @@ class Planet {
     this.menu.display();
   }
 }
-function makeWhiteBorder(img){
+function makeWhiteBorder(img,planetStroke){
   let res = createImage(img.width,img.height);
   img.loadPixels();
   res.loadPixels();
@@ -489,7 +475,7 @@ function makeWhiteBorder(img){
         res.pixels[index]= 255;
         res.pixels[index+1]= 255;
         res.pixels[index+2]= 255;
-        res.pixels[index+3]= 255;
+        res.pixels[index+3]= planetStroke;
       }
     }
   }

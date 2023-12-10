@@ -12,11 +12,7 @@ let mainMenu;
 let gasMenu;
 let rockMenu;
 
-//start stop menus
-let isStartScreen = true; // Variable to track if it's the start screen
-let arrowButton; // Arrow button object
-
-
+/*
 var options = {
   hostname: "localhost",
   port: 8086,
@@ -86,7 +82,7 @@ function updateWithObject1(object1, param) {
     }
     }
 }
-
+*/
 let planetImages  = [];
 function drawStars() {
   push();
@@ -144,8 +140,6 @@ function setup() {
     //VENUS 8
     new Planet(8,centerX - windowWidth / 12, centerY, 50, color(197, 68, 37), 0, "Rock", planetImages[7]),
   ];
-
-  
   //making text centered to cordinated
   textAlign(CENTER, CENTER);
   imageMode(CENTER,CENTER);
@@ -173,7 +167,7 @@ function draw() {
   }
   pop();
   if(mouseIsPressed){
-    
+    /*
     //menu values
     sendToMax("main1 " + mainMenu.vol.value());
     sendToMax("main2 " + mainMenu.gravity.value());
@@ -195,8 +189,8 @@ function draw() {
     sendToMax("venus " + planets[8].y);
     
     //sun in out
-    //sendToMax("sun " + isBlue);
-    
+    sendToMax("sun " + backgroundColor.toString());
+    */
     
     
     mouseIsPressed=false;
@@ -218,7 +212,7 @@ function draw() {
     const isBlue = JSON.stringify(backgroundColor.levels) === JSON.stringify([40, 89, 137, 255]);
     if (prevIsBlue !== isBlue) {
       console.log('Background color changed:', isBlue);
-      sendToMax("sun " + isBlue);
+      //sendToMax("sun " + isBlue);
       prevIsBlue = isBlue; // Update the previous condition
     }
 }
@@ -271,7 +265,7 @@ class Menu {
       this.y = windowWidth / 200;
     }
     //we will make sliders for vol gravity vaccum
-    this.vol = createSlider(0, 127, 110, 1)
+    this.vol = createSlider(0, 127, 63, 1)
       .hide()
       .size((windowWidth / 5) * 0.65);
     this.vol.elt.addEventListener("input", function(evt){
@@ -496,28 +490,4 @@ function makeWhiteBorder(img){
   res.updatePixels();
   img.updatePixels();
   return res;
-}
-
-class ArrowButton {
-  constructor(x, y, size) {
-    this.x = x;
-    this.y = y;
-    this.size = size;
-  }
-
-  display() {
-    fill(255);
-    beginShape();
-    vertex(this.x - this.size / 2, this.y - this.size / 2);
-    vertex(this.x + this.size / 2, this.y);
-    vertex(this.x - this.size / 2, this.y + this.size / 2);
-    endShape(CLOSE);
-  }
-
-  contains(px, py) {
-    return px > this.x - this.size / 2 &&
-      px < this.x + this.size / 2 &&
-      py > this.y - this.size / 2 &&
-      py < this.y + this.size / 2;
-  }
 }

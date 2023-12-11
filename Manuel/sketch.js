@@ -13,9 +13,10 @@ let gasMenu;
 let rockMenu;
 
 //start stop menus
-/*let isStartScreen = true; // Variable to track if it's the start screen
-let arrowButton; // Arrow button object
-*/
+let startButton; // Start button object
+let exitButton; // Exit button object
+let isStartScreen = true; // Variable to track if it's the start screen
+
 
 var options = {
   hostname: "localhost",
@@ -146,22 +147,41 @@ function setup() {
     new Planet(8,centerX - windowWidth / 12, centerY, 50, color(197, 68, 37), 0, "Rock", planetImages[7]),
   ];
 
+
+   // Start button
+   startButton = new StartButton(width / 2, height / 2, 200, 50);
+
+   // Exit button
+   exitButton = new ExitButton(50, height - 80, 80, 30, 8);
   
   //making text centered to cordinated
   textAlign(CENTER, CENTER);
   imageMode(CENTER,CENTER);
 }
 function draw() {
+
+  if (isStartScreen) {
+    // Display start screen
+    background(0); // Black background with 70 opacity
+    fill(255);
+    textSize(40);
+    text("Orion", width / 2, height / 2 - 60);
+    startButton.display();
+  } else {
   background(backgroundColor);
 
   speed = map(mainMenu.gravity.value(), 0, 127, 1, 50);
   drawStars();
+  
+    // Display exit button
+    exitButton.display();
 
   planets.forEach((planet) => {
     planet.display();
   });
   //menu icon
   //three lines
+  
   push();
   stroke(255);
   noFill();
@@ -173,6 +193,9 @@ function draw() {
     line(0,32,0,38);
   }
   pop();
+
+
+
   if(mouseIsPressed){
     
     //menu values
@@ -199,12 +222,12 @@ function draw() {
     //sun in out
     //sendToMax("sun " + isBlue);
     //makeWhiteBorder.display();
-    
+    /*
     let names = ["mars","neptune","earth","jupiter","uranus","saturn","mercury","venus"];
     for(let i=0;i<names.length;i++){
       let p  = planets[i+1];
       sendToMax(names[i]+" "+floor(p.y/(height/8))+" "+p.planetStroke);
-    }
+    }*/
     mouseIsPressed=false;
     if(dist(mouseX,mouseY,width/2,height-80)<40){
       if(mainMenu.showMenu){
@@ -227,8 +250,15 @@ function draw() {
       sendToMax("sun " + isBlue);
       prevIsBlue = isBlue; // Update the previous condition
     }
+  }
+  if(mouseIsPressed){
+  
+  }
+  // Display exit button
+    exitButton.display();
+  
+  //end of draw
 }
-if(mouseIsPressed){}
 }
 function mousePressed() {
   planets.forEach((planet) => {
@@ -371,8 +401,31 @@ class Menu {
         this.y + (windowWidth / 5) * 0.05
       );
     }
+    
   }
 }
+
+function mouseClicked() {
+  if (isStartScreen) {
+    if (startButton.contains(mouseX, mouseY)) {
+      //console.log("Clicked Start Button");
+      sendToMax("menu " + 1);
+      isStartScreen = false;
+    }
+  } else {
+    if (exitButton.contains(mouseX, mouseY)) {
+      sendToMax("menu " + 0);
+      isStartScreen = true;
+    } else {
+      // Check if the mouse is inside the Sun (yellow ellipse)
+      if (planets[0].contains(mouseX, mouseY)) {
+        // Toggle background color
+        isBlue = !isBlue;
+      }
+    }
+  }
+}
+
 class Planet {
   constructor(id, x, y, size, planetColor, planetStroke, content = "",img = undefined) {
     this.x = x;
@@ -493,27 +546,56 @@ function makeWhiteBorder(img,planetStroke){
   img.updatePixels();
   return res;
 }
-/*
-class ArrowButton {
-  constructor(x, y, size) {
+// Start button class
+class StartButton {
+  constructor(x, y, buttonWidth, buttonHeight, cornerRadius) {
     this.x = x;
     this.y = y;
-    this.size = size;
+    this.buttonWidth = buttonWidth;
+    this.buttonHeight = buttonHeight;
   }
 
   display() {
+    fill(40);
+    rect(this.x - this.buttonWidth / 2, this.y - this.buttonHeight / 2, this.buttonWidth, this.buttonHeight, this.cornerRadius);
     fill(255);
-    beginShape();
-    vertex(this.x - this.size / 2, this.y - this.size / 2);
-    vertex(this.x + this.size / 2, this.y);
-    vertex(this.x - this.size / 2, this.y + this.size / 2);
-    endShape(CLOSE);
+    textSize(20);
+    textAlign(CENTER, CENTER);
+    text("Start", this.x, this.y);
   }
 
   contains(px, py) {
-    return px > this.x - this.size / 2 &&
-      px < this.x + this.size / 2 &&
-      py > this.y - this.size / 2 &&
-      py < this.y + this.size / 2;
+    return px > this.x - this.buttonWidth / 2 &&
+      px < this.x + this.buttonWidth / 2 &&
+      py > this.y - this.buttonHeight / 2 &&
+      py < this.y + this.buttonHeight / 2;
   }
-}*/
+}
+
+// Exit button class
+class ExitButton {
+  constructor(x, y, buttonWidth, buttonHeight, cornerRadius) {
+    this.x = x;
+    this.y = y;
+    this.buttonWidth = buttonWidth;
+    this.buttonHeight = buttonHeight;
+    this.cornerRadius = cornerRadius;
+  }
+
+  display() {
+    fill(40);
+    noStroke();
+    rect(this.x, this.y, this.buttonWidth, this.buttonHeight, this.cornerRadius);
+    fill(255);
+    textSize(16);
+    textAlign(CENTER, CENTER);
+    text("Exit", this.x + this.buttonWidth / 2, this.y + this.buttonHeight / 2);
+  }
+
+  contains(px, py) {
+    return px > this.x &&
+      px < this.x + this.buttonWidth &&
+      py > this.y &&
+      py < this.y + this.buttonHeight;
+  }
+}
